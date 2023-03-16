@@ -57,7 +57,7 @@ type weatherBody struct {
 func GetWeatherByCity(cityName string) (*Weather, error) {
 	urlRequest := "https://api.tomorrow.io/v4/weather/realtime?location=%s&apikey=%s"
 
-	cfg := config.GetConfig()
+	cfg := config.GetAPIConfig()
 	logger := logging.GetLogger()
 
 	req, _ := http.NewRequest("GET", fmt.Sprintf(urlRequest, url.QueryEscape(cityName), cfg.WeatherAPIKey), nil)

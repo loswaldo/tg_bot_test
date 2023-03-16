@@ -13,14 +13,15 @@ func main() {
 	logger := logging.GetLogger()
 	logger.Info("create logger")
 
-	cfg := config.GetConfig()
+	cfg := config.GetAPIConfig()
 
 	bot, err := tgbotapi.NewBotAPI(cfg.TelegramAPIKey)
 	if err != nil {
 		logger.Fatalf("can't connect to rg bot err: %v", err)
 	}
 
-	MC := message_creator.NewMessageCreator()
+	dbCfg := config.GetDBConfig()
+	MC := message_creator.NewMessageCreator(dbCfg)
 
 	bot.Debug = false
 
@@ -47,10 +48,10 @@ func main() {
 		// Extract the command from the Message.
 		switch update.Message.Command() {
 		case "stat":
-			msg.Text = "Привет! Я бот погоды. Напиши мне /weather Название_города(в именительном падеже) и я покажу тебе погоду"
+			msg.Text = MC.CreateStatMessage(update.Message.From.ID)
 		case "weather":
 			logger.Infof("Get weather message from %d", update.Message.From.ID)
-			msg.Text = MC.CreateWeatherMessage(update.Message.Text)
+			msg.Text = MC.CreateWeatherMessage(update.Message)
 		case "start":
 			msg.Text = "Привет! Я бот погоды. Напиши мне /weather и  Название_города(в именительном падеже) и я покажу тебе погоду"
 		default:
