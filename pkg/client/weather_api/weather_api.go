@@ -13,11 +13,14 @@ import (
 )
 
 type Weather struct {
-	Temp         float64
-	TempApparent float64
-	Humidity     float64
-	UVIndex      int64
-	WindSpeed    float64
+	Temp          float64
+	TempApparent  float64
+	Humidity      float64
+	UVIndex       int64
+	WindSpeed     float64
+	CloudCover    float64
+	RainIntensity int64
+	SnowIntensity int64
 }
 
 type weatherBody struct {
@@ -80,7 +83,15 @@ func GetWeatherByCity(cityName string) (*Weather, error) {
 		logger.Errorf("can't unmarshal json err: %v", err)
 	}
 
-	return &Weather{Temp: wBody.Data.Values.Temperature, TempApparent: wBody.Data.Values.TemperatureApparent,
-		Humidity: wBody.Data.Values.Humidity, UVIndex: wBody.Data.Values.UvIndex, WindSpeed: wBody.Data.Values.WindSpeed}, nil
+	return &Weather{
+		Temp:          wBody.Data.Values.Temperature,
+		TempApparent:  wBody.Data.Values.TemperatureApparent,
+		Humidity:      wBody.Data.Values.Humidity,
+		UVIndex:       wBody.Data.Values.UvIndex,
+		WindSpeed:     wBody.Data.Values.WindSpeed,
+		CloudCover:    wBody.Data.Values.CloudCover,
+		RainIntensity: wBody.Data.Values.RainIntensity,
+		SnowIntensity: wBody.Data.Values.SnowIntensity,
+	}, nil
 
 }

@@ -44,8 +44,14 @@ func (MC *MessageCreator) CreateWeatherMessage(message *tgbotapi.Message) string
 	if err != nil {
 		MC.logger.Errorf("Can't add statistic user_id :[%d], err : %v", message.From.ID, err)
 	}
-	return fmt.Sprintf("В городе %s сейчас %d градусов °C. Ощущается как %d °C. Скорость ветра %f м/с, UV индекс: %d",
-		cityName, int(weather.Temp), int(weather.TempApparent), weather.WindSpeed, weather.UVIndex)
+	return fmt.Sprintf("В городе %s сейчас %d °C. Ощущается как %d °C.\n"+
+		"Скорость ветра %.2f м/с\n"+
+		"Облачность: %.1f\n"+
+		"Влажность: %.1f\n"+
+		"Осадки в виде дождя: %d\n"+
+		"Осадки в виде снега: %d\n"+
+		"UV индекс: %d",
+		cityName, int(weather.Temp), int(weather.TempApparent), weather.WindSpeed, weather.CloudCover, weather.Humidity, weather.RainIntensity, weather.SnowIntensity, weather.UVIndex)
 
 }
 
