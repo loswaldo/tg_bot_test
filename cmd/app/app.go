@@ -30,6 +30,8 @@ func main() {
 
 	logger.Infof("Authorized on account %s", bot.Self.UserName)
 
+	logger.Info("Application is ready to serve")
+
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
