@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"tg_weather_bot/internal/config"
@@ -60,17 +60,18 @@ func GetWeatherByCity(cityName string) (*Weather, error) {
 	cfg := config.GetAPIConfig()
 	logger := logging.GetLogger()
 
-	req, _ := http.NewRequest("GET", fmt.Sprintf(urlRequest, url.QueryEscape(cityName), cfg.WeatherAPIKey), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf(urlRequest, url.QueryEscape(cityName), cfg.WeatherAPIKey), http.NoBody)
 
 	req.Header.Add("accept", "application/json")
 
 	res, _ := http.DefaultClient.Do(req)
 
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
 	if res.StatusCode != http.StatusOK {
 		return nil, errors.New("wrong city name")
 	}
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
 
 	var wBody weatherBody
 

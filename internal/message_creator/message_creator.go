@@ -3,7 +3,6 @@ package message_creator
 import (
 	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"log"
 	"strings"
 	"tg_weather_bot/internal/config"
 	"tg_weather_bot/pkg/client/postreSQL"
@@ -17,16 +16,17 @@ type MessageCreator struct {
 	db     *postreSQL.PostgresDB
 }
 
-func NewMessageCreator(cfg *config.DBConfig) *MessageCreator {
+func NewMessageCreator(cfg *config.DBConfig) (*MessageCreator, error) {
 	logger := logging.GetLogger()
 	db, err := postreSQL.NewPostgresDB(cfg)
 	if err != nil {
-		log.Fatalf("Can't connect to db err: %v", err)
+		return nil, err
+		//log.Fatalf("Can't connect to db err: %v", err)
 	}
 	return &MessageCreator{
 		logger: logger,
 		db:     db,
-	}
+	}, nil
 }
 
 func (MC *MessageCreator) CreateWeatherMessage(message *tgbotapi.Message) string {
